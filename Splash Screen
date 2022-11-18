@@ -1,0 +1,196 @@
+//venthai's bitmoji
+var drawBitmojiV = function(bitmojiX,bitmojiY,bitHeight)
+{ 
+noStroke();
+
+fill(255, 227, 159);//skintone fill
+
+ellipse(bitmojiX +(bitHeight/100*100), bitmojiY + (bitHeight/100*100),bitHeight/100* 83 , bitHeight/100*100); //head
+
+
+
+
+
+fill(0, 0, 0); //hair fill
+
+quad(bitmojiX +bitHeight/100* 56, bitmojiY +bitHeight/100* 66, bitmojiX+bitHeight/100* 73, bitmojiY+ bitHeight/100*50, bitmojiX +bitHeight/100* 103, bitmojiY + bitHeight/100*45, bitmojiX +bitHeight/100* 58, bitmojiY +bitHeight/100* 92); //left hair
+
+quad(bitmojiX+ bitHeight/100*143, bitmojiY+ bitHeight/100*65, bitmojiX+ bitHeight/100*103, bitmojiY+ bitHeight/100*46, bitmojiX+ bitHeight/100*99, bitmojiY+ bitHeight/100*47, bitmojiX+ bitHeight/100* 143, bitmojiY+ bitHeight/100*98); //right hair
+
+ellipse(bitmojiX +(bitHeight/100*100),bitmojiY +(bitHeight/100*60),bitHeight/100*45,bitHeight/100*26);//hair
+
+stroke(0, 0, 0); //stroke for both eyes 
+
+fill(255, 255, 255); //white inside left eye fill
+
+ellipse(bitmojiX+bitHeight/100* 85, bitmojiY+bitHeight/100* 96,bitHeight/100*14,bitHeight/100*9);//left eye
+
+fill(84, 52, 38); //left pupil fill
+
+ellipse(bitmojiX+bitHeight/100* 86,bitmojiY+bitHeight/100* 96,bitHeight/100*6,bitHeight/100*-8); // left pupil 
+
+fill(255, 255, 255);//white inside right eye fill
+
+ellipse(bitmojiX+bitHeight/100* 114,bitmojiY+ bitHeight/100*96,bitHeight/100*14,bitHeight/100*9);//right eye
+
+fill(84, 52, 38); //right pupil fill
+
+ellipse(bitmojiX+ bitHeight/100*113,bitmojiY+ bitHeight/100*96,bitHeight/100*6, bitHeight/100*-8 );// left pupil 
+
+stroke(0, 0, 0);
+
+line(bitmojiX+bitHeight/100* 90,bitmojiY+bitHeight/100* 86,bitmojiX+bitHeight/100*75, bitmojiY+bitHeight/100* 86); //left eyebrow
+
+line(bitmojiX+ bitHeight/100*122, bitmojiY+bitHeight/100* 86,bitmojiX+ bitHeight/100*109, bitmojiY+ bitHeight/100* 86);//right eyebrow
+
+fill(255, 227, 159); //nose fill
+
+bezier(bitmojiX+bitHeight/100* 101,bitmojiY+bitHeight/100* 101,bitmojiX+bitHeight/100* 112, bitmojiY+bitHeight/100* 121,bitmojiX+ bitHeight/100*99, bitmojiY+bitHeight/100* 121,bitmojiX+ bitHeight/100*99, bitmojiY+bitHeight/100* 118); //nose
+
+fill(245, 84, 84); //lip fill
+
+arc(bitmojiX+ bitHeight/100*101,bitmojiY+bitHeight/100* 132,bitHeight/100* 24,bitHeight/100*6, bitHeight/100*-175,bitHeight/100* -19); //top lip
+
+arc(bitmojiX+bitHeight/100* 101, bitmojiY+bitHeight/100* 133, bitHeight/100*22,bitHeight/100* 6,bitHeight/100*-41, bitHeight/100*202);// bottom lip
+
+fill(0, 0, 0); //black suit fill
+
+quad(bitmojiX+bitHeight/100* 62,bitmojiY+bitHeight/100* 150,bitmojiX+bitHeight/100* 140, bitmojiY+bitHeight/100* 150,bitmojiX+bitHeight/100* 151,bitmojiY+ bitHeight/100*222,
+bitmojiX+ bitHeight/100*52,bitmojiY+bitHeight/100* 220); //suit
+
+fill(255, 255, 255); //white dresshirt fill
+
+rect(bitmojiX+bitHeight/100* 86,bitmojiY+bitHeight/100* 150,bitHeight/100*29,bitHeight/100*71); //dresshirt
+
+fill(255,255,255); //colar fill
+
+triangle (bitmojiX+ bitHeight/100*136,bitmojiY+bitHeight/100* 150,bitmojiX+ bitHeight/100*112, bitmojiY+ bitHeight/100*164,bitmojiX+ bitHeight/100*101,bitmojiY+ bitHeight/100*150); // right colar
+
+triangle (bitmojiX + bitHeight/100* 69,bitmojiY+ bitHeight/100*150,bitmojiX+ bitHeight/100*88,bitmojiY+ bitHeight/100*164,bitmojiX+bitHeight/100* 101,bitmojiY+ bitHeight/100*150); // left colar
+fill(59, 191, 83); //tie fill
+
+quad(bitmojiX +bitHeight/100* 101,bitmojiY+ bitHeight/100*219,bitmojiX +bitHeight/100* 111, bitmojiY+bitHeight/100* 201,bitmojiX + bitHeight/100*101,bitmojiY+ bitHeight/100*150, 
+bitmojiX + bitHeight/100*92,bitmojiY+ bitHeight/100*200); //Tie itself
+
+triangle (bitmojiX + bitHeight/100*92,bitmojiY+ bitHeight/100*161,bitmojiX + bitHeight/100*111, bitmojiY+ bitHeight/100*162,bitmojiX + bitHeight/100*102,bitmojiY+bitHeight/100*150); // tie colar
+
+triangle (bitmojiX +bitHeight/100* 133,bitmojiY+bitHeight/100* 166,bitmojiX + bitHeight/100*135,bitmojiY+bitHeight/100* 173,bitmojiX +bitHeight/100* 116,bitmojiY+ bitHeight/100*171); //handkerchief 
+
+fill(255, 255, 255);
+textSize(15);
+text("VM",bitmojiX +bitHeight/100* 61,bitmojiY +bitHeight/100*179);
+
+
+}; //end of drawBody
+//marven's bitmoji
+var drawHead = function(bitmojiX, bitmojiY, bitmojiH) {
+var r= bitmojiH/100;
+
+//head  
+  noStroke();
+ 
+    
+        fill(198, 134, 66);
+        ellipse(bitmojiX+100*r, bitmojiY+100*r,90*r,100*r);
+       
+        
+
+//neck
+        fill(198,134,66);
+        rect(bitmojiX+85*r, bitmojiY+125*r,33*r,27*r);
+
+//hat 
+        fill(21, 112, 12);
+        ellipse(bitmojiX+100*r, bitmojiY+84*r,84*r,-40*r );
+        fill(13, 1, 13);
+        arc( bitmojiX+100*r,  bitmojiY+90*r, 90*r, 88*r, -180, -1);
+
+// brown eyes
+        fill(58,29,0);
+        ellipse(bitmojiX+82*r, bitmojiY+108*r,10*r,4*r);
+        ellipse(bitmojiX+120*r, bitmojiY+108*r,10*r,4*r);
+
+// nose
+        stroke(0,0,0); //nose
+        fill(198,134,65);
+        bezier( bitmojiX+100*r,  bitmojiY+106*r, bitmojiX+ 110*r, bitmojiY+151*r, bitmojiX +87*r, bitmojiY+105*r, bitmojiX+99*r,  bitmojiY+124*r);
+
+//mouth
+        fill(255,255,255);
+        arc( bitmojiX+100*r,  bitmojiY+135*r, 23*r, 6*r, 1*r, 180*r);
+        line( bitmojiX+85*r, bitmojiY+134*r, bitmojiX+113*r,  bitmojiY+134*r);
+};
+//body
+var drawBody = function(bitmojiX,bitmojiY,bitmojiH) {
+    var r= bitmojiH/100;
+        noStroke();
+        fill(31,32,34);
+        quad( bitmojiX+44*r,  bitmojiY+152*r,bitmojiX+ 105*r, bitmojiY+ 150*r, bitmojiX+ 100*r,  bitmojiY+ 225*r,bitmojiX+ 32*r,  bitmojiY+212*r);
+        quad(bitmojiX+158*r,  bitmojiY+152*r, bitmojiX+95*r,  bitmojiY+150*r,bitmojiX+100*r,  bitmojiY+225*r, bitmojiX+ 168*r,  bitmojiY+212*r);
+
+// Name Initial
+        fill(242, 233, 233);
+        text("MS", bitmojiX+122*r, bitmojiY+170*r,90*r,80*r);
+};
+  
+var drawBitmoji= function(bitmojiX,bitmojiY, bitmojiH)  {
+   
+   drawHead(bitmojiX,bitmojiY, bitmojiH);
+    drawBody(bitmojiX, bitmojiY, bitmojiH);
+};
+
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 107;
+    this.height = config.height || 39;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(87, 207, 205);
+    rect(this.x, this.y, this.width, this.height, 56);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+28, this.y+this.height/5);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var StartButton = new Button({
+    x: 44,
+    y: 348,
+    label: "START",
+    onClick: function() {
+       
+    }
+});
+
+
+
+var Menu =function(){
+    background(219, 219, 219);
+    fill(74, 21, 21);
+    textSize(35);
+    text("Walls",149,50);//text
+    textSize(20);
+    text("Venthai Mao \nMarvens Sainterlien",217,361);//First Scene
+   
+    StartButton.draw();
+    drawBitmoji(100,85,85);
+    drawBitmojiV(-24,100,85);
+};
+Menu();
