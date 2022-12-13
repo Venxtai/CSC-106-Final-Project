@@ -1,6 +1,3 @@
-//Splash Screen
-var currentScene = 0;
-//venthai's bitmoji
 var drawBitmojiV = function(bitmojiX,bitmojiY,bitHeight)
 { 
 noStroke();
@@ -83,8 +80,7 @@ textSize(15);
 text("VM",bitmojiX +bitHeight/100* 61,bitmojiY +bitHeight/100*179);
 
 
-}; //end of drawBody
-//marven's bitmoji
+};
 var drawHead = function(bitmojiX, bitmojiY, bitmojiH) {
 var r= bitmojiH/100;
 
@@ -121,8 +117,7 @@ var r= bitmojiH/100;
         fill(255,255,255);
         arc( bitmojiX+100*r,  bitmojiY+135*r, 23*r, 6*r, 1*r, 180*r);
         line( bitmojiX+85*r, bitmojiY+134*r, bitmojiX+113*r,  bitmojiY+134*r);
-};
-//body
+};//body
 var drawBody = function(bitmojiX,bitmojiY,bitmojiH) {
     var r= bitmojiH/100;
         noStroke();
@@ -134,260 +129,96 @@ var drawBody = function(bitmojiX,bitmojiY,bitmojiH) {
         fill(242, 233, 233);
         text("MS", bitmojiX+122*r, bitmojiY+170*r,90*r,80*r);
 };
-  
 var drawBitmoji= function(bitmojiX,bitmojiY, bitmojiH)  {
    
    drawHead(bitmojiX,bitmojiY, bitmojiH);
-    drawBody(bitmojiX, bitmojiY, bitmojiH);
+   drawBody(bitmojiX, bitmojiY, bitmojiH);
 };
 
-var Button = function(config) {
-    this.x = config.x || 0;
-    this.y = config.y || 0;
-    this.width = config.width || 107;
-    this.height = config.height || 39;
-    this.label = config.label || "Click";
-    this.onClick = config.onClick || function() {};
+
+var x=200;
+var y=200;
+var p1X=13;
+var p1Y=175;
+var p2X=300; 
+var p2Y=150; 
+var speed= 3;
+var up = 0; 
+var down = 0; 
+var left = 0;
+var right= 0;
+ 
+ var ball = function(){  //Soccer Ball Code
+  fill(255,255,255);
+  ellipse(x,y,20,20); 
+  fill(0, 0, 0); 
+  ellipse(x-5,y-5,6,6); 
+  ellipse(x+5,y-5,6,6); 
+  ellipse(x-5,y+5,6,6);
+  ellipse(x+5,y+5,6,6);
+  ellipse(x,y,7,7);
 };
 
-Button.prototype.draw = function() {
-    fill(87, 207, 205);
-    rect(this.x, this.y, this.width, this.height, 56);
-    fill(0, 0, 0);
-    textSize(19);
-    textAlign(LEFT, TOP);
-    text(this.label, this.x+28, this.y+this.height/5);
-};
-
-Button.prototype.isMouseInside = function() {
-    return mouseX > this.x &&
-           mouseX < (this.x + this.width) &&
-           mouseY > this.y &&
-           mouseY < (this.y + this.height);
-};
-
-Button.prototype.handleMouseClick = function() {
-    if (this.isMouseInside()) {
-        this.onClick();
-    }
-};
-
-var StartButton = new Button({
-    x: 147,
-    y: 207,
-    label: "START",
-    onClick: function() {
-       currentScene=1;
-    }
-});
-
-var Menu =function(){
-    rectMode(CORNER);
-    background(104, 235, 97);
-    fill(74, 21, 21);
-    textSize(35);
-    text("Football",136,50);//text
-    textSize(20);
-    text("Venthai Mao \nMarvens Sainterlien",123,325);//First Scene
-   
-    StartButton.draw();
-    drawBitmoji(-12,102,85);
-    drawBitmojiV(238,99,85);
-};
-
-// Bitmoji 
-
-// Marven's Bitmoji
 
 
-
-
-var player1Y = height/2;
-var player2Y = height/2;
-var player1Score = 0;
-var player2Score = 0;
-var ball;
-var gameStarted = false;
-var t = 0;
-
-//Constants
-var PAUSE_TIME = 60;
-var PLAYER_MOVE_SPEED = 5;
-var BALL_SPEED = 3.5;
-var BITMOJI_HEIGHT = 100;
-var BITMOJI_WIDTH = 25;
-
-angleMode = "degrees";
-
-var Ball = function(position, speed) {
-    this.position = position;
-    this.speed = speed || BALL_SPEED;
-    
-    this.radius = 12;
-    
-    this.resetVelocity = function() {
-        this.theta = random(0, 360);
-        this.velocity = new PVector(
-        this.speed*cos(this.theta), -this.speed*sin(this.theta));
-        player2Y = height/2;
-    };
-    this.resetVelocity();
-    
-    this.draw = function() {
-        fill(255, 255, 255);
-        noStroke();
-        ellipse(this.position.x, this.position.y,
-        this.radius*2, this.radius*2);
-    };
-    
-    this.collideWithBitmoji = function(x, y) {
-        if (this.position.x - this.radius < x + BITMOJI_WIDTH/2 &&
-        this.position.x + this.radius > x - BITMOJI_WIDTH/2) {
-            if (dist(0, this.position.y, 0, y) <
-            BITMOJI_HEIGHT/2 + this.radius) {
-                if (this.position.x > x) {
-                    this.position.x = x + 
-                    this.radius + BITMOJI_WIDTH/2;
-                }
-                else if (this.position.x < x) {
-                    this.position.x = x - 
-                    this.radius - BITMOJI_WIDTH/2;
-                }
-                this.velocity.mult(new PVector(-1, 1));
-            }
-        }
-    };
-    
-    this.update = function() {
-        //Handle wall collisions
-        if (this.position.x < 0) {
-            player2Score++;
-            this.position = new PVector(width/2, height/2);
-            gameStarted = false;
-            this.resetVelocity();
-        }
-        else if (this.position.x > width) {
-            player1Score++;
-            this.position = new PVector(width/2, height/2);
-            gameStarted = false;
-            this.resetVelocity();
-        }
-        if (this.position.y < 0) {
-            this.position.y = 0;
-            this.velocity.mult(new PVector(1, -1));
-        }
-        else if (this.position.y > height) {
-            this.position.y = height;
-            this.velocity.mult(new PVector(1, -1));
-        }
-        
-        //Handle paddle collisions
-        this.collideWithBitmoji(20, player1Y);
-        this.collideWithBitmoji(width-20, player2Y);
-        
-        this.position.add(this.velocity);
-    };
-};
-
-ball = new Ball(new PVector(width/2, height/2));
-
-var drawScores = function() {
-    var s;
-    
-    fill(255, 255, 255);
-    textSize(20);
-    
-    s = "Player 1: " + player1Score;
-    text(s, width*0.25-textWidth(s)/2, 25);
-    s = "Player 2: " + player2Score;
-    text(s, width*0.75-textWidth(s)/2, 25);
-};
-
-var updatePlayer2 = function() {
-    if (abs(player2Y-ball.position.y) < PLAYER_MOVE_SPEED){
-        player2Y = ball.position.y;
-    }
-    else if (player2Y-ball.position.y >= PLAYER_MOVE_SPEED) {
-        player2Y -= PLAYER_MOVE_SPEED;
-    }
-    else if (player2Y-ball.position.y <= PLAYER_MOVE_SPEED) {
-        player2Y += PLAYER_MOVE_SPEED;
-    }
-    
-};
-
-//Move the player up
-var movePlayerUp = function() {
-    player1Y -= PLAYER_MOVE_SPEED;
-    player2Y -= PLAYER_MOVE_SPEED;
-};
-
-//Move the player down
-var movePlayerDown = function() {
-    player1Y += PLAYER_MOVE_SPEED;
-    player2Y += PLAYER_MOVE_SPEED;
-};
-
-var drawPlayers = function() {
-    //Constrain the player movement
-    
-    
-    rectMode(CENTER);
-    fill(255, 255, 255);
-    
-    drawBitmoji(12, player1Y, BITMOJI_WIDTH, BITMOJI_HEIGHT);
-    drawBitmojiV(320, player2Y, BITMOJI_WIDTH, BITMOJI_HEIGHT);
-    player1Y= constrain(player1Y, 0,400 );
-    player2Y= constrain(player1Y, 0,400 );
-    
-};
-
-mouseClicked= function(){
-    if (currentScene===0){
-       StartButton.handleMouseClick();
-    }
-};
-
-draw = function() {
-    //Control Player 1
-if (keyIsPressed){
-    if (keyCode=== UP){
-       movePlayerUp(); 
-    }
-   
-    else if (keyCode=== DOWN){
-        movePlayerDown();
-    }
-    
-    
-    
-    
-}
-    //Draw the environment
+var draw = function() {
+    //Environment
     background(32, 150, 25);
-    updatePlayer2();
-    drawPlayers();
-    drawScores();
     stroke(255, 255, 255);
     line(width/2, 0, width/2, height);
     noFill();
     ellipse(width/2, 200, width/-4, 100);
-    //Draw the ball
-    ball.draw(); 
     
-    if (currentScene === 0) {
-        Menu();
+ 
+    //ball
+    ball();
+    
+    //ball border code
+    if(x>15)
+    {x=200;} 
+    if(x<15)
+    {x=390;}
+    if(y>15)
+    {y=200;}
+    if(y<15)
+    {y=390;}
+
+  //Player 1 
+  
+  drawBitmojiV(p1X,p1Y,30);
+  if (keyIsPressed && keyCode === RIGHT) {
+        p1X = p1X + speed;
+    }if (keyIsPressed && keyCode === LEFT) {
+        p1X = p1X - speed;
+    }if (keyIsPressed && keyCode === UP) {
+        p1Y = p1Y - speed;
+    }if (keyIsPressed && keyCode === DOWN) {
+        p1Y = p1Y + speed;
     }
-    
-    
-    if (!gameStarted) {
-        t++;
-        if (t >= PAUSE_TIME) {
-            t = 0;
-            gameStarted = true;
-        }
-        return;
-    }
-    
-    ball.update();
+    //player 1 border
+    if(p1X>365)
+    {p1X=360;} 
+    if(p1X<0)
+    {p1X=5;}
+    if(p1Y>330)
+    {p1Y=325;} 
+    if(p1Y<0)
+    {p1Y=0;}
+  
+    //player 2
+
+    fill(0, 0, 255); 
+    drawBitmoji(p2X,p2Y,30);
+    if(p2X>390){p2X=390;} if(p2X<10){p2X=10;}if(p2Y>290){p2Y=290;} if(p2Y<10){p2Y=10;}p2Y=mouseY;
+    if(mouseIsPressed&&mouseButton===LEFT){p2X-=speed;}
+    if(mouseIsPressed&&mouseButton===RIGHT){p2X+=speed;}
+  
+
+
+
+
+
 };
+
+
+
