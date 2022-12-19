@@ -135,7 +135,10 @@ var drawBitmoji= function(bitmojiX,bitmojiY, bitmojiH)  {
    drawBody(bitmojiX, bitmojiY, bitmojiH);
 };
 
-
+var keys = [];
+var speed= 3;
+keyPressed = function(){keys[keyCode] = true;};
+keyReleased = function(){keys[keyCode] = false;};
 var x=200;
 var y=200;
 var p1X=13;
@@ -185,15 +188,10 @@ var scoreBoard= function(){// Score Board
     text('P1: ' + p1Score,113,54);
     text('P2: ' + p1Score,218,54);};
 var P1= function(){drawBitmojiV(p1X,p1Y,30);
-  if (keyIsPressed && keyCode === RIGHT) {
-        p1X = p1X + speed;
-    }if (keyIsPressed && keyCode === LEFT) {
-        p1X = p1X - speed;
-    }if (keyIsPressed && keyCode === UP) {
-        p1Y = p1Y - speed;
-    }if (keyIsPressed && keyCode === DOWN) {
-        p1Y = p1Y + speed;
-    }
+ if(keys[68]){this.p1X += speed;}  //move right
+    if(keys[65]){this.p1X -= speed;} //move left
+    if(keys[87]){this.p1Y -= speed;} //move up
+    if(keys[83]){this.p1Y += speed;}// move down
     //player 1 border
     if(p1X>390)
     {p1X=390;} 
