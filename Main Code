@@ -135,104 +135,217 @@ var drawBitmoji= function(bitmojiX,bitmojiY, bitmojiH)  {
    drawBody(bitmojiX, bitmojiY, bitmojiH);
 };
 
+var t=0;
+var minutes=1.5;
 var keys = [];
-var speed= 3;
+
 keyPressed = function(){keys[keyCode] = true;};
 keyReleased = function(){keys[keyCode] = false;};
-var x=200;
-var y=200;
-var p1X=13;
-var p1Y=175;
-var p2X=300; 
-var p2Y=150; 
-var speed= 3;
 var up = 0; 
 var down = 0; 
 var left = 0;
 var right= 0;
+var p1X=height/317;
+var p1Y=height/2.4;
+var p2X=height/1.1; 
+var p2Y=height/2.3; 
+
+
 var p1Score=0;
 var p2Score=0;
+var ball;
+//Constants
 
- var ball = function(){  //Soccer Ball Code
-  fill(255,255,255);
-  ellipse(x,y,20,20); 
-  fill(0, 0, 0); 
-  ellipse(x-5,y-5,6,6); 
-  ellipse(x+5,y-5,6,6); 
-  ellipse(x-5,y+5,6,6);
-  ellipse(x+5,y+5,6,6);
-  ellipse(x,y,7,7);
-   
-    //ball border code
-    if(x>390)
-    {x=375;} 
-    if(x<10)
-    {x=25;}
-    if(y>390)
-    {y=375;}
-    if(y<10)
-    {y=25;}
+var PLAYER_MOVE_SPEED = 3;
+var BALL_SPEED = 0.5;
+var PLAYER_HEIGHT = 100;
+var PLAYER_WIDTH = 20;
+var currentScene = 0;
+angleMode = "degrees";
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 107;
+    this.height = config.height || 39;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
 };
+
+Button.prototype.draw = function() {
+    fill(87, 207, 205);
+    rect(this.x, this.y, this.width, this.height, 56);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+28, this.y+this.height/5);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var StartButton = new Button({
+    x: 147,
+    y: 207,
+    label: "START",
+    onClick: function() {
+       currentScene=1;
+    }
+});
+
+var Menu =function(){
+    background(104, 235, 97);
+    fill(74, 21, 21);
+    textSize(35);
+    text("Football",136,50);//text
+    textSize(20);
+    text("Venthai Mao \nMarvens Sainterlien",123,325);//First Scene
+   
+    StartButton.draw();
+    drawBitmoji(-12,102,85);
+    drawBitmojiV(238,99,85);
+};
+var Ball = function(position, speed) {
+    this.position = position;
+    this.speed = speed || BALL_SPEED;
+    
+    this.radius = 12;
+    
+    this.resetVelocity = function() {
+        this.theta = random(0, 360);
+        this.velocity = new PVector(
+        this.speed*cos(this.theta), -this.speed*sin(this.theta));
+        
+    };
+    this.resetVelocity();
+    
+    this.draw = function() {
+        fill(255, 255, 255);
+       ellipse(this.position.x,this.position.y,30,30);
+    fill(0, 0, 0);
+    rect(this.position.x+-2,this.position.y-2,5,5);
+    rect(this.position.x+6,this.position.y-12,5,5);
+    rect(this.position.x+10,this.position.y-3,5,5);
+    rect(this.position.x+-10,this.position.y+7,5,5);
+    rect(this.position.x+-4,this.position.y+-12,5.7,-4);
+    rect(this.position.x+-1,this.position.y+12,4.5,5);
+    rect(this.position.x+8,this.position.y+5,4.6,5);
+    rect(this.position.x+-13,this.position.y+-2,5,6);
+    };
+    
+    this.collideWithPlayer = function(x, y) {
+        if (this.position.x - this.radius < x + PLAYER_WIDTH/2 &&
+        this.position.x + this.radius > x - PLAYER_WIDTH/2) {
+            if (dist(0, this.position.y, 0, y) <
+            PLAYER_HEIGHT/2 + this.radius) {
+                if (this.position.x > x) {
+                    this.position.x = x + 
+                    this.radius + PLAYER_WIDTH/2;
+                }
+                else if (this.position.x < x) {
+                    this.position.x = x - 
+                    this.radius - PLAYER_WIDTH/2;
+                }
+                this.velocity.mult(new PVector(-1, 1));
+            }
+        }
+    };
+    
+    this.update = function() {
+        //Handle wall collisions
+        if (this.position.x < 24) {
+            p2Score++;
+            this.position = new PVector(width/2, height/2);
+            //gameStarted = false;
+            this.resetVelocity();
+        }
+        else if (this.position.x > width) {
+            p1Score++;
+            this.position = new PVector(width/2, height/2);
+           // gameStarted = false;
+            this.resetVelocity();
+        }
+        if (this.position.y < 0) {
+            this.position.y = 0;
+            this.velocity.mult(new PVector(1, -1));
+        }
+        else if (this.position.y > height) {
+            this.position.y = height;
+            this.velocity.mult(new PVector(1, -1));
+        }
+        
+        //Handle paddle collisions
+        this.collideWithPlayer(p1X, p1Y);
+        this.collideWithPlayer(p2X+3, p2Y+3);
+        
+        this.position.add(this.velocity);
+    };
+  
+   
+};
+ball = new Ball(new PVector(width/2, height/2));
 var goals= function(){
     // goals 
     //left
-    rect(-48,148,80,100);
-    rect(-22,127,89,142);
+    rect(-44,148,80,100);
+    rect(-22,128,80,142);
     //right
-    rect(343,148,72,100);
-    rect(307,128,134,142);
+    rect(354,148,72,100);
+    rect(327,128,95,142);
 };
 var scoreBoard= function(){// Score Board 
     textSize(25);
+    noFill();
     text('Score',163,23);
     text('P1: ' + p1Score,113,54);
-    text('P2: ' + p1Score,218,54);};
-var P1= function(){drawBitmojiV(p1X,p1Y,30);
- if(keys[68]){this.p1X += speed;}  //move right
-    if(keys[65]){this.p1X -= speed;} //move left
-    if(keys[87]){this.p1Y -= speed;} //move up
-    if(keys[83]){this.p1Y += speed;}// move down
+    text('P2: ' + p2Score,218,54);};
+var P1= function(){
+    drawBitmojiV(p1X, p1Y,PLAYER_WIDTH);
+
+ if(keys[68]){this.p1X += PLAYER_MOVE_SPEED;}  //move right
+    if(keys[65]){this.p1X -= PLAYER_MOVE_SPEED;} //move left
+    if(keys[87]){this.p1Y -= PLAYER_MOVE_SPEED;} //move up
+    if(keys[83]){this.p1Y += PLAYER_MOVE_SPEED;}// move down
     //player 1 border
-    if(p1X>390)
-    {p1X=390;} 
-    if(p1X<10)
-    {p1X=10;}
-    if(p1Y>390)
-    {p1Y=390;} 
-    if(p1Y<10)
-    {p1Y=10;}};
+      if(p1X>365){p1X=360;} 
+    if(p1X<0){p1X=5;}
+    if(p1Y>330){p1Y=325;} 
+    if(p1Y<0) {p1Y=0;}};
 var P2= function(){fill(0, 0, 255); 
-    drawBitmoji(p2X,p2Y,30);
-    if(p2X>390){p2X=390;} if(p2X<10){p2X=10;}if(p2Y>390){p2Y=390;} if(p2Y<10){p2Y=10;}p2Y=mouseY;
-    if(mouseIsPressed&&mouseButton===LEFT){p2X-=speed;}
-    if(mouseIsPressed&&mouseButton===RIGHT){p2X+=speed;}
+    drawBitmoji(p2X, p2Y, PLAYER_WIDTH);
+     //player 2 border
+    p2Y=mouseY;
+    if(p2X>365){p2X=360;} 
+    if(p2X<0){p2X=5;}
+    if(p2Y>330){p2Y=325;} 
+    if(p2Y<0){p2Y=0;}
+    
+   /*if (keyIsPressed && keyCode === RIGHT) {
+        p2X = p2X + PLAYER_MOVE_SPEED;
+    }if (keyIsPressed && keyCode === LEFT) {
+        p2X = p2X - PLAYER_MOVE_SPEED;
+    }if (keyIsPressed && keyCode === UP) {
+        p2Y = p2Y - PLAYER_MOVE_SPEED;
+    }if (keyIsPressed && keyCode === DOWN) {
+        p2Y = p2Y + PLAYER_MOVE_SPEED;
+    }*/
+    if(mouseIsPressed&&mouseButton===LEFT){p2X-=PLAYER_MOVE_SPEED;}
+if(mouseIsPressed&&mouseButton===RIGHT){p2X+=PLAYER_MOVE_SPEED;}
+      
     };
-var moveBall= function(){    // hitting the ball
-  
-  if(p1X<x-10&&p1X>x-20&&p1Y<y-10&&p1Y>y-20){x =+ 5;y =+ 5;}
-  if(p1X<x+10&&p1X>x-10&&p1Y<y-10&&p1Y>y-20){y =+ 5;}
-  if(p1X<x+20&&p1X>x+10&&p1Y<y-10&&p1Y>y-20){x =- 5;y =+ 5;}
-  if(p1X<x-10&&p1X>x-20&&p1Y<y+10&&p1Y>y-20){x =+ 5;}
-  if(p1X<x+20&&p1X>x+10&&p1Y<y+10&&p1Y>y-20){x =- 5;}
-  if(p1X<x-10&&p1X>x-20&&p1Y<y+20&&p1Y>y+10){x =+ 5;y =- 5;}
-  if(p1X<x+10&&p1X>x-10&&p1Y<y+20&&p1Y>y+10){y =- 5;}
-  if(p1X<x+20&&p1X>x+10&&p1Y<y+20&&p1Y>y+10){x =- 5;y =- 5;}
-  //p2 hits ball
-  if(p2X<x-10&&p2X>x-20&&p2Y<y-10&&p2Y>y-20){x =+ 5;y =+ 5;}
-  if(p2X<x+10&&p2X>x-10&&p2Y<y-10&&p2Y>y-20){y =+ 5;}
-  if(p2X<x+20&&p2X>x+10&&p2Y<y-10&&p2Y>y-20){x =- 5;y =+ 5;}
-  if(p2X<x-10&&p2X>x-20&&p2Y<y+10&&p2Y>y-20){x =+ 5;}
-  if(p2X<x+20&&p2X>x+10&&p2Y<y+10&&p2Y>y-20){x =- 5;}
-  if(p2X<x-10&&p2X>x-20&&p2Y<y+20&&p2Y>y+10){x =+ 5;y =- 5;}
-  if(p2X<x+10&&p2X>x-10&&p2Y<y+20&&p2Y>y+10){y =- 5;}
-  if(p2X<x+20&&p2X>x+10&&p2Y<y+20&&p2Y>y+10){x =- 5;y =- 5;}
-  
+
+var mouseClicked= function() {
+if (currentScene===0){StartButton.handleMouseClick();}
 };
-var scoring= function(){  //scoring 
-  // left side 
-if (x>-48&& y<148 && y> 120){x=200;y=200; p2Score+=1;}
-//right side 
-if (x>343&& y<148 && y> 120){x=200;y=200; p1Score+=1;}};
 
 var draw = function() {
     //Environment
@@ -244,8 +357,9 @@ var draw = function() {
     goals();
     scoreBoard();
  
-    //ball
-    ball();
+
+  //Draw the ball
+    ball.draw();
   
   //Player 1 
  P1();
@@ -253,8 +367,32 @@ var draw = function() {
     //player 2
 P2();
     
-moveBall();
-scoring();
 
+
+//  timer
+    var seconds = round(t/60);
+     textSize(26);
+     text("TIME: "+round((seconds-30)/60)+":"+seconds%60,4,26);
+  if(t/60>60*minutes){frameRate(0.01);}
+    t++; 
+    
+ // Winners   
+   fill(222, 255, 10);
+    // P1 Wins
+ if(t/60>60*minutes&&p1Score>p2Score){
+     textSize(100);text("P1\nWINS!",62,115);}
+  //P2 Wins
+  if(t/60>60*minutes&& p1Score<p2Score){
+      textSize(100);
+      text("P2\nWINS!",62,115);}
+  // Draw
+  if(t/60>60*minutes &&p1Score===p2Score){
+      textSize(100);
+      text("DRAW",49,180);}
+      
+      ball.update();
+      
+      
+if (currentScene===0){Menu();}
 };
 
