@@ -182,15 +182,19 @@ var StartButton = new Button({
 
 
 var Menu =function(){
-    background(219, 219, 219);
+    background(104, 235, 97);
     fill(74, 21, 21);
     textSize(35);
-    text("Walls",149,50);//text
+    text("Football",136,14);//text
     textSize(20);
-    text("Venthai Mao \nMarvens Sainterlien",217,361);//First Scene
-   
+    text("Venthai Mao ",8,59);//First Scene
+    text("Marvens \n Sainterlien",280,52);//First Scene
+    soccerBall();
     StartButton.draw();
-    drawBitmoji(100,85,85);
-    drawBitmojiV(-24,100,85);
+    drawBitmoji(246,69,81);
+    drawBitmojiV(-24,56,85);
+    fill(0, 0, 0);
+    textSize(20);
+    text("Game is 30 seconds! Player 1 use WASD \n Player 2 use mouse control! Have fun, gg! ",5,296);
 };
 Menu();
