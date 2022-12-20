@@ -1,5 +1,5 @@
-var drawBitmojiV = function(bitmojiX,bitmojiY,bitHeight)
-{ 
+// Venthai's bitmoji code
+var drawBitmojiV = function(bitmojiX,bitmojiY,bitHeight) { 
 noStroke();
 
 fill(255, 227, 159);//skintone fill
@@ -81,6 +81,7 @@ text("VM",bitmojiX +bitHeight/100* 61,bitmojiY +bitHeight/100*179);
 
 
 };
+//Marven's bitmoji head
 var drawHead = function(bitmojiX, bitmojiY, bitmojiH) {
 var r= bitmojiH/100;
 
@@ -117,7 +118,8 @@ var r= bitmojiH/100;
         fill(255,255,255);
         arc( bitmojiX+100*r,  bitmojiY+135*r, 23*r, 6*r, 1*r, 180*r);
         line( bitmojiX+85*r, bitmojiY+134*r, bitmojiX+113*r,  bitmojiY+134*r);
-};//body
+};
+//Marven's bitmoji body
 var drawBody = function(bitmojiX,bitmojiY,bitmojiH) {
     var r= bitmojiH/100;
         noStroke();
@@ -129,39 +131,48 @@ var drawBody = function(bitmojiX,bitmojiY,bitmojiH) {
         fill(242, 233, 233);
         text("MS", bitmojiX+122*r, bitmojiY+170*r,90*r,80*r);
 };
+//Marven's bitmoji code
 var drawBitmoji= function(bitmojiX,bitmojiY, bitmojiH)  {
    
    drawHead(bitmojiX,bitmojiY, bitmojiH);
    drawBody(bitmojiX, bitmojiY, bitmojiH);
 };
 
-var t=0;
-var minutes=1.5;
-var keys = [];
 
-keyPressed = function(){keys[keyCode] = true;};
-keyReleased = function(){keys[keyCode] = false;};
-var up = 0; 
-var down = 0; 
-var left = 0;
-var right= 0;
-var p1X=height/317;
-var p1Y=height/2.4;
-var p2X=height/1.1; 
-var p2Y=height/2.3; 
+var t=0; //clock ticker
+var minutes=0.5; //how long game lasts
+var keys = []; // key array for WASD
 
 
-var p1Score=0;
-var p2Score=0;
-var ball;
+// key function for WASD
+keyPressed = function(){keys[keyCode] = true;}; 
+keyReleased = function(){keys[keyCode] = false;}; 
+
+
+var p1X=height/317; //player 1 coordinations
+var p1Y=height/2.4; //player 1 coordinations
+var p2X=height/1.1; //player 2 coordinations
+var p2Y=height/2.3; //player 2 coordinations
+
+//player 1 score
+var p1Score=0; 
+
+//player 2 score
+var p2Score=0; 
+
+//variable for the ball
+var ball; 
+
+
 //Constants
-
-var PLAYER_MOVE_SPEED = 3;
-var BALL_SPEED = 0.5;
-var PLAYER_HEIGHT = 100;
-var PLAYER_WIDTH = 20;
-var currentScene = 0;
+var PLAYER_MOVE_SPEED = 3; //player movement
+var BALL_SPEED = 0; //ball speed
+var PLAYER_HEIGHT = 100;//player height
+var PLAYER_WIDTH = 20;//player width
+var currentScene = 0;//spalsh screen 
 angleMode = "degrees";
+
+//button contructor code for the start button
 var Button = function(config) {
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -170,7 +181,6 @@ var Button = function(config) {
     this.label = config.label || "Click";
     this.onClick = config.onClick || function() {};
 };
-
 Button.prototype.draw = function() {
     fill(87, 207, 205);
     rect(this.x, this.y, this.width, this.height, 56);
@@ -179,20 +189,17 @@ Button.prototype.draw = function() {
     textAlign(LEFT, TOP);
     text(this.label, this.x+28, this.y+this.height/5);
 };
-
 Button.prototype.isMouseInside = function() {
     return mouseX > this.x &&
            mouseX < (this.x + this.width) &&
            mouseY > this.y &&
            mouseY < (this.y + this.height);
 };
-
 Button.prototype.handleMouseClick = function() {
     if (this.isMouseInside()) {
         this.onClick();
     }
 };
-
 var StartButton = new Button({
     x: 147,
     y: 207,
@@ -202,46 +209,74 @@ var StartButton = new Button({
     }
 });
 
+
+//soccer ball code in splash screen
+var soccerBall = function(){
+    fill(255, 255, 255);
+    ellipse(200,146,50,50);
+    fill(0, 0, 0);
+    rect(207,130,8,8);
+    rect(192,125,10,10);
+    rect(188,135,-8,10);
+    rect(190,160,15,10);
+    rect(209,155,-7.1,-11);
+    rect(208,133,10.8,10);
+    rect(182,158,11.0,-11);
+    rect(212,145,12,12);
+};
+
+//splash screen
 var Menu =function(){
     background(104, 235, 97);
     fill(74, 21, 21);
     textSize(35);
-    text("Football",136,50);//text
+    text("Football",136,14);//text
     textSize(20);
-    text("Venthai Mao \nMarvens Sainterlien",123,325);//First Scene
-   
+    text("Venthai Mao ",8,59);//First Scene
+     text("Marvens \n Sainterlien",280,52);//First Scene
+    soccerBall();
     StartButton.draw();
-    drawBitmoji(-12,102,85);
-    drawBitmojiV(238,99,85);
+    drawBitmoji(260,73,81);
+    drawBitmojiV(-24,56,85);
+    fill(0, 0, 0);
+    textSize(20);
+    text("Game is 30 seconds! Player 1 use WASD \n Player 2 use mouse control! Have fun, gg! ",5,296);
 };
+
+//ball function
 var Ball = function(position, speed) {
-    this.position = position;
-    this.speed = speed || BALL_SPEED;
+    this.position = position; //ball position property
+    this.speed = speed || BALL_SPEED; //ball speed property
+    this.radius = 12;//ball radius property
     
-    this.radius = 12;
-    
+    //method to reset the velocity
     this.resetVelocity = function() {
         this.theta = random(0, 360);
         this.velocity = new PVector(
         this.speed*cos(this.theta), -this.speed*sin(this.theta));
         
     };
+    
     this.resetVelocity();
     
+    //method function to draw the ball moving
     this.draw = function() {
         fill(255, 255, 255);
-       ellipse(this.position.x,this.position.y,30,30);
-    fill(0, 0, 0);
-    rect(this.position.x+-2,this.position.y-2,5,5);
-    rect(this.position.x+6,this.position.y-12,5,5);
-    rect(this.position.x+10,this.position.y-3,5,5);
-    rect(this.position.x+-10,this.position.y+7,5,5);
-    rect(this.position.x+-4,this.position.y+-12,5.7,-4);
-    rect(this.position.x+-1,this.position.y+12,4.5,5);
-    rect(this.position.x+8,this.position.y+5,4.6,5);
-    rect(this.position.x+-13,this.position.y+-2,5,6);
+        stroke(0);
+        fill(255);
+        ellipse(this.position.x,this.position.y,30,30);
+        fill(0);
+        rect(this.position.x+7,this.position.y-2,5,5);
+        rect(this.position.x+0,this.position.y-10,5,5);
+        rect(this.position.x+-8,this.position.y-2,5,5);
+        rect(this.position.x+0,this.position.y+5,5,5);
+        rect(this.position.x+-12,this.position.y+-10,2.5,5);
+        rect(this.position.x+-12,this.position.y+4,2.5,5);
+        rect(this.position.x+-12,this.position.y+4,2.5,5);
+        rect(this.position.x+-6,this.position.y+-14,5,2);
     };
     
+    //method that look to collide with players in game
     this.collideWithPlayer = function(x, y) {
         if (this.position.x - this.radius < x + PLAYER_WIDTH/2 &&
         this.position.x + this.radius > x - PLAYER_WIDTH/2) {
@@ -260,75 +295,104 @@ var Ball = function(position, speed) {
         }
     };
     
+    //method for environment collisions, ex: hitting the canvas
     this.update = function() {
-        //Handle wall collisions
-        if (this.position.x < 24) {
+        //Handle goal collisions for player 2
+        if (this.position.x < 0 && this.position.y >= 150  && this.position.y <= 250 ) {
             p2Score++;
             this.position = new PVector(width/2, height/2);
-            //gameStarted = false;
             this.resetVelocity();
         }
-        else if (this.position.x > width) {
+        //Handle goal collisions for player 1
+        else if (this.position.x > 380 && this.position.y >= 150  && this.position.y <= 250)     {
             p1Score++;
             this.position = new PVector(width/2, height/2);
-           // gameStarted = false;
             this.resetVelocity();
         }
+        
+        //Y-axis ball border
         if (this.position.y < 0) {
             this.position.y = 0;
             this.velocity.mult(new PVector(1, -1));
         }
+        
+        
         else if (this.position.y > height) {
             this.position.y = height;
             this.velocity.mult(new PVector(1, -1));
         }
         
-        //Handle paddle collisions
+        //Handle player collisions
         this.collideWithPlayer(p1X, p1Y);
-        this.collideWithPlayer(p2X+3, p2Y+3);
-        
+        this.collideWithPlayer(p2X, p2Y);
         this.position.add(this.velocity);
     };
   
    
 };
-ball = new Ball(new PVector(width/2, height/2));
+ball = new Ball(new PVector(width/2, height/2));// new ball instance
+
+//drawing for the goals in environment
 var goals= function(){
-    // goals 
-    //left
-    rect(-44,148,80,100);
-    rect(-22,128,80,142);
-    //right
-    rect(354,148,72,100);
-    rect(327,128,95,142);
+    // goals code
+    
+    //left goal
+    
+    //inner goal
+    rect(-39,143,80,100);
+    //outer goal
+    rect(-15,122,80,146);
+   
+    //rightgoal
+    
+    //inner goal
+    rect(367,144,80,100);
+    //outer goal
+    rect(335,122,80,146);
 };
+
+// draws the score board
 var scoreBoard= function(){// Score Board 
     textSize(25);
     noFill();
     text('Score',163,23);
     text('P1: ' + p1Score,113,54);
     text('P2: ' + p2Score,218,54);};
-var P1= function(){
-    drawBitmojiV(p1X, p1Y,PLAYER_WIDTH);
 
- if(keys[68]){this.p1X += PLAYER_MOVE_SPEED;}  //move right
+//player 1 function to move it
+var P1= function(){
+    
+    //draws the bitmoji
+    drawBitmojiV(p1X, p1Y,PLAYER_WIDTH);
+    
+    //keys control for player 1
+    if(keys[68]){this.p1X += PLAYER_MOVE_SPEED;}  //move right
     if(keys[65]){this.p1X -= PLAYER_MOVE_SPEED;} //move left
     if(keys[87]){this.p1Y -= PLAYER_MOVE_SPEED;} //move up
     if(keys[83]){this.p1Y += PLAYER_MOVE_SPEED;}// move down
+    
     //player 1 border
-      if(p1X>365){p1X=360;} 
+    if(p1X>365){p1X=360;} 
     if(p1X<0){p1X=5;}
     if(p1Y>330){p1Y=325;} 
-    if(p1Y<0) {p1Y=0;}};
+    if(p1Y<0) {p1Y=0;}}; 
+
+//player 2 function to move it
 var P2= function(){fill(0, 0, 255); 
+    
+    //calls the bitmoji
     drawBitmoji(p2X, p2Y, PLAYER_WIDTH);
-     //player 2 border
+
+    //player 2 moving in y-axis
     p2Y=mouseY;
+   
+    //player 2 border
     if(p2X>365){p2X=360;} 
     if(p2X<0){p2X=5;}
     if(p2Y>330){p2Y=325;} 
     if(p2Y<0){p2Y=0;}
     
+    //arrow key controls  !!!!!!!!NOT USING!!!!!!!!!
    /*if (keyIsPressed && keyCode === RIGHT) {
         p2X = p2X + PLAYER_MOVE_SPEED;
     }if (keyIsPressed && keyCode === LEFT) {
@@ -338,16 +402,21 @@ var P2= function(){fill(0, 0, 255);
     }if (keyIsPressed && keyCode === DOWN) {
         p2Y = p2Y + PLAYER_MOVE_SPEED;
     }*/
+    
+    //if statement movement for player 2
     if(mouseIsPressed&&mouseButton===LEFT){p2X-=PLAYER_MOVE_SPEED;}
-if(mouseIsPressed&&mouseButton===RIGHT){p2X+=PLAYER_MOVE_SPEED;}
+    if(mouseIsPressed&&mouseButton===RIGHT){p2X+=PLAYER_MOVE_SPEED;}
       
     };
 
+//mouseclicked for current scene
 var mouseClicked= function() {
-if (currentScene===0){StartButton.handleMouseClick();}
-};
+    if (currentScene===0){StartButton.handleMouseClick();}
+    };
 
+//draw function
 var draw = function() {
+    
     //Environment
     background(32, 150, 25);
     stroke(255, 255, 255);
@@ -356,43 +425,44 @@ var draw = function() {
     ellipse(width/2, 200, width/-4, 100);
     goals();
     scoreBoard();
- 
 
-  //Draw the ball
+    //Draw the ball
     ball.draw();
   
-  //Player 1 
- P1();
+    //Player 1 
+    P1();
   
     //player 2
-P2();
+    P2();
     
 
 
-//  timer
+   //timer
     var seconds = round(t/60);
-     textSize(26);
-     text("TIME: "+round((seconds-30)/60)+":"+seconds%60,4,26);
-  if(t/60>60*minutes){frameRate(0.01);}
+    textSize(26);
+    text("TIME: "+round((seconds-30)/60)+":"+seconds%60,4,26);
+    if(t/60>60*minutes){frameRate(0.01);}
     t++; 
     
- // Winners   
-   fill(222, 255, 10);
+    // Winners   
+    fill(222, 255, 10);
+    
     // P1 Wins
- if(t/60>60*minutes&&p1Score>p2Score){
-     textSize(100);text("P1\nWINS!",62,115);}
-  //P2 Wins
-  if(t/60>60*minutes&& p1Score<p2Score){
+    if(t/60>60*minutes&&p1Score>p2Score){
+      textSize(100);text("P1\nWINS!",62,115);}
+   
+    //P2 Wins
+    if(t/60>60*minutes&& p1Score<p2Score){
       textSize(100);
       text("P2\nWINS!",62,115);}
-  // Draw
-  if(t/60>60*minutes &&p1Score===p2Score){
+    
+    // Draw
+    if(t/60>60*minutes &&p1Score===p2Score){
       textSize(100);
       text("DRAW",49,180);}
-      
       ball.update();
-      
-      
-if (currentScene===0){Menu();}
+    
+    //if statement for splash screen
+    if (currentScene===0){Menu();}
 };
 
